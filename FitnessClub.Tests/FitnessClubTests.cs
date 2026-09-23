@@ -8,7 +8,7 @@ namespace FitnessClub.Tests;
 public class FitnessClubTests
 {
     /// <summary>
-    /// Контекст с текстовыми данными клуба
+    /// Контекст с тестовыми данными клуба
     /// </summary>
     private readonly FitnessClubContext _db = new();
 
