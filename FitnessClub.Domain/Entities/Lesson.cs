@@ -14,7 +14,6 @@ public class Lesson
     /// Тренер
     /// </summary>
     public required Trainer Trainer { get; set; }
-    public DateTime Date { get; set; }
 
     /// <summary>
     /// Дата и время начала занятия
