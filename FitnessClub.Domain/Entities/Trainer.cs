@@ -8,7 +8,7 @@ public class Trainer : Person
     /// <summary>
     /// Специализация тренера
     /// </summary>
-    public Specialization Specialization { get; set; } = new();
+    public required Specialization Specialization { get; set; }
 
     /// <summary>
     /// Стаж работы

@@ -5,13 +5,8 @@ namespace FitnessClub.Tests;
 /// <summary>
 /// Юнит-тесты
 /// </summary>
-public class FitnessClubTests
+public class FitnessClubTests(FitnessClubContext db) : IClassFixture<FitnessClubContext>
 {
-    /// <summary>
-    /// Контекст с тестовыми данными клуба
-    /// </summary>
-    private readonly FitnessClubContext _db = new();
-
     /// <summary>
     /// Проверка: вывод информации о всех тренерах, стаж работы которых не менее 5 лет
     /// </summary>
@@ -28,7 +23,7 @@ public class FitnessClubTests
             "Смирнов Алексей Петрович",
         ];
 
-        var trainers = _db.Trainers
+        var trainers = db.Trainers
             .Where(t => t.ExperienceYears >= 5)
             .OrderBy(t => t.FullName)
             .ToList();
@@ -52,7 +47,7 @@ public class FitnessClubTests
             "Сидоров Николай Петрович",
         ];
 
-        var clients = _db.Clients
+        var clients = db.Clients
             .Where(c => c.SubscriptionEnd < DateTime.Today)
             .OrderBy(c => c.FullName)
             .ToList();
@@ -73,7 +68,7 @@ public class FitnessClubTests
     public void HallAvailability_MatchesSchedule(int day, int hour, int minute, bool expected)
     {
         bool IsHallAvailable(string hall, DateTime time) =>
-        !_db.Lessons.Any(l =>
+        !db.Lessons.Any(l =>
             l.Hall == hall &&
             l.DateStart <= time &&
             time < l.DateEnd);
@@ -97,7 +92,7 @@ public class FitnessClubTests
             "Попова Елена Викторовна",
         ];
 
-        var lessons = _db.Lessons
+        var lessons = db.Lessons
             .Where(l => l.Hall == "Зал йоги" &&
                         l.DateStart.Year == DateTime.Today.Year &&
                         l.DateStart.Month == DateTime.Today.Month)
@@ -123,7 +118,7 @@ public class FitnessClubTests
             "Попова Елена Викторовна",
         ];
 
-        var top = _db.Lessons
+        var top = db.Lessons
             .GroupBy(l => l.Trainer)
             .OrderByDescending(g => g.Count())
             .Take(5)

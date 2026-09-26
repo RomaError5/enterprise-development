@@ -13,5 +13,5 @@ public class Specialization
     /// <summary>
     /// Название специализации
     /// </summary>
-    public string Name { get; set; } = "";
+    public required string Name { get; set; }
 }

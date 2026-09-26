@@ -6,6 +6,11 @@
 public class Lesson
 {
     /// <summary>
+    /// Идентификатор
+    /// </summary>
+    public int Id { get; set; }
+
+    /// <summary>
     /// Клиент
     /// </summary>
     public required Client Client { get; set; }
@@ -28,7 +33,7 @@ public class Lesson
     /// <summary>
     /// Название зала, в котором проходит занятие
     /// </summary>
-    public string Hall { get; set; } = "";
+    public string? Hall { get; set; }
 
     /// <summary>
     /// Пробное занятие или нет

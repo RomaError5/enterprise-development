@@ -13,10 +13,10 @@ public class Client : Person
     /// <summary>
     /// Дата начала действия абонемента
     /// </summary>
-    public DateTime? SubscriptionStart { get; set; }
+    public required DateTime SubscriptionStart { get; set; }
 
     /// <summary>
     /// Дата окончания действия абонемента
     /// </summary>
-    public DateTime? SubscriptionEnd { get; set; }
+    public required DateTime SubscriptionEnd { get; set; }
 }

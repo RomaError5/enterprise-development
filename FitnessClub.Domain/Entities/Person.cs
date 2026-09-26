@@ -8,6 +8,11 @@ namespace FitnessClub.Domain.Entities;
 public abstract class Person
 {
     /// <summary>
+    /// Идентификатор
+    /// </summary>
+    public int Id { get; set; }
+
+    /// <summary>
     /// Номер паспорта
     /// </summary>
     public required string PassportNumber { get; set; }
