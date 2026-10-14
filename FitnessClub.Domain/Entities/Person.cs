@@ -5,7 +5,7 @@ namespace FitnessClub.Domain.Entities;
 /// <summary>
 /// Базовый класс человека
 /// </summary>
-public abstract class Person
+public abstract class Person : IEntity
 {
     /// <summary>
     /// Идентификатор

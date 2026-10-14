@@ -2,11 +2,35 @@
 
 namespace FitnessClub.Domain.Interfaces;
 
-public interface IRepository<TEntity, TKey>
+/// <summary>
+/// Универсальный контракт репозитория
+/// </summary>
+/// <typeparam name="TEntity">Тип сущности</typeparam>
+public interface IRepository<TEntity> where TEntity : IEntity
 {
-    public TEntity Create(TEntity entity);
-    public TEntity? Read(TKey entityId);
-    public IList<TEntity> ReadAll();
-    public TEntity Update(TEntity entity);
-    public bool Delete(TKey entityId);
+    /// <summary>
+    /// Добавляет сущность, назначает ей id и возвращает её
+    /// </summary>
+    public Task<TEntity> Create(TEntity entity);
+
+    /// <summary>
+    /// Возвращает все сущности
+    /// </summary>
+    /// <returns></returns>
+    public Task<IReadOnlyList<TEntity>> ReadAll();
+
+    /// <summary>
+    /// Возвращает сущность по идентификатору
+    /// </summary>
+    public Task<TEntity?> Read(long entityId);
+
+    /// <summary>
+    /// Обновляет сущность
+    /// </summary>
+    public Task<bool> Update(TEntity entity);
+
+    /// <summary>
+    /// Удаляет сущность по идентификатору
+    /// </summary>
+    public Task<bool> Delete(long entityId);
 }

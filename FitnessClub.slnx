@@ -1,4 +1,10 @@
 <Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
   <Project Path="FitnessClub.Domain/FitnessClub.Domain.csproj" />
+  <Project Path="FitnessClub.Infrastructure.InMemory/FitnessClub.Infrastructure.InMemory.csproj" Id="1d3b7a88-e9e2-4d5e-a9a7-12a2619dce46" />
   <Project Path="FitnessClub.Tests/FitnessClub.Tests.csproj" />
 </Solution>

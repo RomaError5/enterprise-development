@@ -3,7 +3,7 @@
 /// <summary>
 /// Класс специализации (используется для тренера)
 /// </summary>
-public class Specialization
+public class Specialization : IEntity
 {
     /// <summary>
     /// Идентифиактор специализации

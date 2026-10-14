@@ -3,7 +3,7 @@
 /// <summary>
 /// Запись клиента на занятия 
 /// </summary>
-public class Lesson
+public class Lesson : IEntity
 {
     /// <summary>
     /// Идентификатор
