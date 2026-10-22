@@ -17,7 +17,6 @@ public abstract class CrudServiceBase<TEntity, TDto, TEditDto>(IRepository<TEnti
     /// Создаёт запись и возвращает её
     /// </summary>
     /// <param name="editDto"></param>
-    /// <returns></returns>
     public virtual async Task<TDto> Create(TEditDto editDto)
     {
         await ValidateAsync(editDto);
@@ -31,7 +30,6 @@ public abstract class CrudServiceBase<TEntity, TDto, TEditDto>(IRepository<TEnti
     /// <summary>
     /// Возвращает все записи
     /// </summary>
-    /// <returns></returns>
     public async Task<IReadOnlyList<TDto>> ReadAll()
     {
         var entities = await repository.ReadAll();
@@ -42,7 +40,6 @@ public abstract class CrudServiceBase<TEntity, TDto, TEditDto>(IRepository<TEnti
     /// Возвращает запись по идентификатору
     /// </summary>
     /// <param name="id">Индентификатор</param>
-    /// <returns></returns>
     /// <exception cref="KeyNotFoundException">Запись не найдена</exception>
     public async Task<TDto> Read(int id)
     {
@@ -55,9 +52,8 @@ public abstract class CrudServiceBase<TEntity, TDto, TEditDto>(IRepository<TEnti
     /// <summary>
     /// Обновляет запись и возвращает её
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="id">Идентификатор</param>
     /// <param name="editDto"></param>
-    /// <returns></returns>
     /// <exception cref="KeyNotFoundException">Запись не найдена</exception>
     public virtual async Task<TDto> Update(int id, TEditDto editDto)
     {
@@ -76,8 +72,7 @@ public abstract class CrudServiceBase<TEntity, TDto, TEditDto>(IRepository<TEnti
     /// <summary>
     /// Удаляет запись
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="id">Идентификатор</param>
     /// <exception cref="KeyNotFoundException">Запись не найдена</exception>
     public async Task Delete(int id)
     {
