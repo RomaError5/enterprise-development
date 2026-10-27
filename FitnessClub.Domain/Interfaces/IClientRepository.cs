@@ -7,5 +7,5 @@ namespace FitnessClub.Domain.Interfaces;
 /// </summary>
 public interface IClientRepository : IRepository<Client>
 {
-    Task<object?> Read(int? clientId);
+    public Task<object?> Read(int? clientId);
 }
