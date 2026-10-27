@@ -10,35 +10,35 @@ public class TrainerDto
     /// <summary>
     /// Идентификатор
     /// </summary>
-    public int Id { get; set; }
+    public int Id { get; init; }
 
     /// <summary>
     /// Номер паспорта
     /// </summary>
-    public string PassportNumber { get; set; } = string.Empty;
+    public string PassportNumber { get; init; } = string.Empty;
 
     /// <summary>
     /// ФИО
     /// </summary>
-    public string FullName { get; set; } = string.Empty;
+    public string FullName { get; init; } = string.Empty;
 
     /// <summary>
     /// Пол
     /// </summary>
-    public Gender Gender { get; set; }
+    public Gender Gender { get; init; }
 
     /// <summary>
     /// Дата рождения
     /// </summary>
-    public DateTime BirthDate { get; set; }
+    public DateTime BirthDate { get; init; }
 
     /// <summary>
     /// Специализация
     /// </summary>
-    public SpecializationDto Specialization { get; set; } = new();
+    public SpecializationDto Specialization { get; init; } = new();
 
     /// <summary>
     /// Стаж работы (лет)
     /// </summary>
-    public int ExperienceYears { get; set; }
+    public int ExperienceYears { get; init; }
 }

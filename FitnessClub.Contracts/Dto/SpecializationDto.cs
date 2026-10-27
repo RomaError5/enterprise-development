@@ -8,10 +8,10 @@ public class SpecializationDto
     /// <summary>
     /// Идентификатор специализации
     /// </summary>
-    public int Id { get; set; }
+    public int Id { get; init; }
 
     /// <summary>
     /// Название специализации
     /// </summary>
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; init; } = string.Empty;
 }
