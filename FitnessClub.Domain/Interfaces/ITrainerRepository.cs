@@ -5,7 +5,4 @@ namespace FitnessClub.Domain.Interfaces;
 /// <summary>
 /// Репозиторий тренеров
 /// </summary>
-public interface ITrainerRepository : IRepository<Trainer>
-{
-    public Task<object?> Read(int? trainerId);
-}
+public interface ITrainerRepository : IRepository<Trainer>;

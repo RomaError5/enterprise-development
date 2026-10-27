@@ -33,16 +33,16 @@ public class LessonService(
     /// <exception cref="KeyNotFoundException">Клиент или тренер не найдены</exception>
     protected override async Task<Lesson> MapToEntityAsync(LessonEditDto editDto)
     {
-        var client = await clientRepository.Read(editDto.ClientId)
+        var client = await clientRepository.Read(editDto.ClientId.Value)
             ?? throw new KeyNotFoundException($"Клиент с идентификатором {editDto.ClientId} не найден");
 
-        var trainer = await trainerRepository.Read(editDto.TrainerId)
+        var trainer = await trainerRepository.Read(editDto.TrainerId.Value)
             ?? throw new KeyNotFoundException($"Тренер с идентификатором {editDto.TrainerId} не найден");
 
         return new Lesson
         {
-            Client = (Client)client,
-            Trainer = (Trainer)trainer,
+            Client = client,
+            Trainer = trainer,
             DateStart = editDto.DateStart,
             DateEnd = editDto.DateEnd,
             Hall = editDto.Hall,
