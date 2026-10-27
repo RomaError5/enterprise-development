@@ -11,13 +11,13 @@ public class LessonEditDto
     /// Идентификатор клиента
     /// </summary>
     [Range(0, int.MaxValue, ErrorMessage = "Укажите идентификатор клиента")]
-    public int ClientId { get; set; }
+    public int? ClientId { get; set; }
 
     /// <summary>
     /// Идентификатор тренера
     /// </summary>
     [Range(0, int.MaxValue, ErrorMessage = "Укажите идентификатор тренера")]
-    public int TrainerId { get; set; }
+    public int? TrainerId { get; set; }
 
     /// <summary>
     /// Дата и время начала

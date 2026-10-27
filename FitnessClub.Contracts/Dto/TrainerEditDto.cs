@@ -27,7 +27,7 @@ public class TrainerEditDto
     /// </summary>
     [Required(ErrorMessage = "Пол обязателен")]
     [EnumDataType(typeof(Gender), ErrorMessage = "Недопустимое значение пола")]
-    public Gender Gender { get; set; }
+    public Gender? Gender { get; set; }
 
     /// <summary>
     /// Дата рождения

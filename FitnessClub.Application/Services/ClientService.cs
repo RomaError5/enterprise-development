@@ -33,10 +33,10 @@ public class ClientService(IClientRepository repository)
         {
             PassportNumber = editDto.PassportNumber,
             FullName = editDto.FullName,
-            Gender = editDto.Gender,
+            Gender = editDto.Gender.Value,
             BirthDate = editDto.BirthDate,
             Phone = editDto.Phone,
             SubscriptionStart = editDto.SubscriptionStart,
-            SubscriptionEnd = editDto.SubscriptionEnd,
+            SubscriptionEnd = editDto.SubscriptionEnd.Value,
         });
 }

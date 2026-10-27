@@ -27,7 +27,7 @@ public class ClientEditDto
     /// </summary>
     [Required(ErrorMessage = "Пол обязателен")]
     [EnumDataType(typeof(Gender), ErrorMessage = "Недопустимое значение пола")]
-    public Gender Gender { get; set; }
+    public Gender? Gender { get; set; }
 
     /// <summary>
     /// Дата рождения
@@ -52,5 +52,5 @@ public class ClientEditDto
     /// Дата окончания абонемента
     /// </summary>
     [Required(ErrorMessage = "Дата окончания абонемента обязательна")]
-    public DateTime SubscriptionEnd { get; set; }
+    public DateTime? SubscriptionEnd { get; set; }
 }

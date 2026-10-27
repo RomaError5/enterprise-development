@@ -27,7 +27,7 @@ public class TrainerService(
         {
             PassportNumber = editDto.PassportNumber,
             FullName = editDto.FullName,
-            Gender = editDto.Gender,
+            Gender = editDto.Gender.Value,
             BirthDate = editDto.BirthDate,
             Specialization = specialization,
             ExperienceYears = editDto.ExperienceYears,
