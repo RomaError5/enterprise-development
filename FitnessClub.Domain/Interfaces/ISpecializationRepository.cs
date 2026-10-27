@@ -5,6 +5,4 @@ namespace FitnessClub.Domain.Interfaces;
 /// <summary>
 /// Репозиторий специализаций
 /// </summary>
-public interface ISpecializationRepository : IRepository<Specialization>
-{
-}
+public interface ISpecializationRepository : IRepository<Specialization>;

@@ -6,18 +6,16 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Хранилище (InMemory): seed-данные и репозитории.
-// На третьей лабе эта строка заменяется на регистрацию MsSqlServer-реализаций
+// Хранилище (InMemory): seed-данные и репозитории
 builder.Services.AddInMemoryRepositories();
 
-// Бизнес-логика: CRUD- и аналитические сервисы
+// CRUD- и аналитические сервисы
 builder.Services.AddApplicationServices();
 
 builder.Services
     .AddControllers()
     .AddJsonOptions(options =>
     {
-        // Enum'ы (например, Gender) приходят и уходят строками: "Male", "Female"
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
@@ -38,7 +36,7 @@ builder.Services.AddSwaggerGen(options =>
     }
 });
 
-// Глобальная обработка ошибок: всё логируется, клиенту — ProblemDetails без деталей реализации
+// Глобальный обработчик ошибок
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 

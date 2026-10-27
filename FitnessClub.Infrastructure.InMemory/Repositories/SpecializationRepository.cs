@@ -8,6 +8,5 @@ namespace FitnessClub.Infrastructure.InMemory.Repositories;
 /// InMemory-репозиторий специализаций поверх общего seed-контекста
 /// </summary>
 /// <param name="context">Тестовые данные клуба</param>
-public class SpecializationRepository(FitnessClubContext context) : InMemoryRepository<Specialization>(context.Specializations), ISpecializationRepository
-{
-}
+public class SpecializationRepository(FitnessClubContext context)
+    : InMemoryRepository<Specialization>(context.Specializations), ISpecializationRepository;

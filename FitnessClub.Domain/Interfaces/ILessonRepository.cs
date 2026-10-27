@@ -5,6 +5,4 @@ namespace FitnessClub.Domain.Interfaces;
 /// <summary>
 /// Репозиторий занятий
 /// </summary>
-public interface ILessonRepository : IRepository<Lesson>
-{
-}
+public interface ILessonRepository : IRepository<Lesson>;

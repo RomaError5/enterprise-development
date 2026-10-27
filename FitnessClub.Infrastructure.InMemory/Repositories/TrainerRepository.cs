@@ -8,6 +8,5 @@ namespace FitnessClub.Infrastructure.InMemory.Repositories;
 /// InMemory-репозиторий тренеров поверх общего seed-контекста
 /// </summary>
 /// <param name="context">Тестовые данные клуба</param>
-public class TrainerRepository(FitnessClubContext context) : InMemoryRepository<Trainer>(context.Trainers), ITrainerRepository
-{
-}
+public class TrainerRepository(FitnessClubContext context)
+    : InMemoryRepository<Trainer>(context.Trainers), ITrainerRepository;
