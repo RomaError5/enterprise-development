@@ -1,6 +1,4 @@
-﻿using FitnessClub.Domain.Entities;
-
-namespace FitnessClub.Domain.Interfaces;
+﻿namespace FitnessClub.Domain.Interfaces;
 
 /// <summary>
 /// Универсальный контракт репозитория

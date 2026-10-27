@@ -1,5 +1,4 @@
-﻿using FitnessClub.Domain.Entities;
-using FitnessClub.Domain.Interfaces;
+﻿using FitnessClub.Domain.Interfaces;
 
 namespace FitnessClub.Infrastructure.InMemory.Repositories;
 

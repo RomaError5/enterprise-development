@@ -1,4 +1,4 @@
-﻿namespace FitnessClub.Domain.Entities;
+﻿namespace FitnessClub.Domain.Interfaces;
 
 /// <summary>
 /// Базовый контракт сущности

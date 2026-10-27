@@ -1,4 +1,6 @@
-﻿namespace FitnessClub.Domain.Entities;
+﻿using FitnessClub.Domain.Interfaces;
+
+namespace FitnessClub.Domain.Entities;
 
 /// <summary>
 /// Класс специализации (используется для тренера)
