@@ -20,7 +20,7 @@ public interface IRepository<TEntity> where TEntity : IEntity
     /// <summary>
     /// Возвращает сущность по идентификатору
     /// </summary>
-    public Task<TEntity?> Read(long entityId);
+    public Task<TEntity?> Read(int entityId);
 
     /// <summary>
     /// Обновляет сущность
@@ -30,5 +30,5 @@ public interface IRepository<TEntity> where TEntity : IEntity
     /// <summary>
     /// Удаляет сущность по идентификатору
     /// </summary>
-    public Task<bool> Delete(long entityId);
+    public Task<bool> Delete(int entityId);
 }
