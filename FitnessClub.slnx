@@ -4,6 +4,9 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path="global.json" />
+  </Folder>
   <Project Path="FitnessClub.Api/FitnessClub.Api.csproj" Id="c9d94e48-0241-44c6-ab98-76c15a9206e7" />
   <Project Path="FitnessClub.Application/FitnessClub.Application.csproj" Id="50edca95-7456-4d72-81da-78fb0fc1c719" />
   <Project Path="FitnessClub.Contracts/FitnessClub.Contracts.csproj" Id="a77ad834-9b69-44cb-854b-325fc6739832" />
