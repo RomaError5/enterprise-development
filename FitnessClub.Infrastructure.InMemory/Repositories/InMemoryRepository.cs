@@ -44,7 +44,7 @@ public class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : 
     /// </summary>
     /// <param name="entityId">Идентификатор</param>
     /// <returns></returns>
-    public Task<TEntity?> Read(long entityId) => Task.FromResult(_items.FirstOrDefault(e => e.Id == entityId));
+    public Task<TEntity?> Read(int entityId) => Task.FromResult(_items.FirstOrDefault(e => e.Id == entityId));
 
     /// <summary>
     /// Заменяет сущность
@@ -65,7 +65,7 @@ public class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : 
     /// </summary>
     /// <param name="entityId">Идентификатор</param>
     /// <returns></returns>
-    public Task<bool> Delete(long entityId)
+    public Task<bool> Delete(int entityId)
     {
         var entity = _items.FirstOrDefault(e => e.Id == entityId);
         if (entity is null) return Task.FromResult(false);
