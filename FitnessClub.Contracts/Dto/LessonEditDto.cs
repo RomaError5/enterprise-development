@@ -10,12 +10,14 @@ public class LessonEditDto
     /// <summary>
     /// Идентификатор клиента
     /// </summary>
+    [Required(ErrorMessage = "Идентификатор клиента обязателен")]
     [Range(0, int.MaxValue, ErrorMessage = "Укажите идентификатор клиента")]
     public int? ClientId { get; set; }
 
     /// <summary>
     /// Идентификатор тренера
     /// </summary>
+    [Required(ErrorMessage = "Идентификатор тренера обязателен")]
     [Range(0, int.MaxValue, ErrorMessage = "Укажите идентификатор тренера")]
     public int? TrainerId { get; set; }
 
