@@ -27,7 +27,9 @@ public class TrainerService(
         {
             PassportNumber = editDto.PassportNumber,
             FullName = editDto.FullName,
-            Gender = editDto.Gender.Value,
+            Gender = editDto.Gender is { } gender
+                ? gender
+                : throw new InvalidOperationException("Пол обязателен"),
             BirthDate = editDto.BirthDate,
             Specialization = specialization,
             ExperienceYears = editDto.ExperienceYears,

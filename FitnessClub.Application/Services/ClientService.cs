@@ -33,10 +33,14 @@ public class ClientService(IClientRepository repository)
         {
             PassportNumber = editDto.PassportNumber,
             FullName = editDto.FullName,
-            Gender = editDto.Gender.Value,
+            Gender = editDto.Gender is { } gender
+                ? gender
+                : throw new InvalidOperationException("Пол обязателен"),
             BirthDate = editDto.BirthDate,
             Phone = editDto.Phone,
             SubscriptionStart = editDto.SubscriptionStart,
-            SubscriptionEnd = editDto.SubscriptionEnd.Value,
+            SubscriptionEnd = editDto.SubscriptionEnd is { } subscriptionEnd
+                ? subscriptionEnd
+                : throw new InvalidOperationException("Дата окончания подписки обязательно"),
         });
 }
