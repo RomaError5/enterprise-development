@@ -1,7 +1,11 @@
-# Разработка корпоративных приложений — лабораторная работа №1
+# Разработка корпоративных приложений — лабораторная работа №2
 
-## «Классы»
-В рамках первой лабораторной работы реализована объектно-ориентированная модель фитнесс-клуба, подготовлены тестовые данные и unit-тесты с использованием LINQ. Данные хранятся в памяти в виде коллекций.
+## «Сервер — REST API»
+В рамках второй лабораторной работы для предметной области автосервиса реализовано серверное приложение с использованием ASP.NET Core Web API.
+
+Сервер предоставляет REST API для выполнения CRUD-операций над сущностями первой лабораторной работы, операций получения связанных данных и аналитических запросов.
+
+Данные хранятся в памяти в виде коллекций.
 
 Вариант: 53
 
@@ -13,26 +17,103 @@
 ### Основные сущности
 | Класс | Назначение |
 |---|---|
-| `Client` | Клиент фитнес-клуба |
-| `Trainer` | Тренер фитнес-клуба |
-| `Lesson` | Запись клиента на занятие |
+| `Person` | Базовый класс с персональными данными, общими для клиента и тренера: номер паспорта, ФИО, пол (`Gender` — перечисление), дата рождения |
+| `Client` | Клиент фитнес-клуба: телефон, дата начала и дата окончания абонемента |
+| `Trainer` | Тренер фитнес-клуба: специализация (сущность-справочник `Specialization`), стаж работы |
+| `Lesson` | Запись клиента на занятие: клиент, тренер, дата и время начала (окончание может проставляться позднее), название зала, признак пробного посещения |
 
-### Перечисления
-`Gender` — пол человека:
+## Архитектура решения
 
-- `Male`
-- `Female`
+| Проект | Назначение |
+|---|---|
+| `FitnessClub.Api` | ASP.NET Core Web API: контроллеры, HTTP-маршруты и конфигурация приложения |
+| `FitnessClub.Application` | Сервисы, бизнес-логика, обработка CRUD-операций и аналитических запросов |
+| `FitnessClub.Contracts` | DTO для передачи данных и интерфейсы сервисов |
+| `FitnessClub.Domain` | Сущности предметной области и интерфейсы репозиториев, генератор тестовых данных |
+| `FitnessClub.Infrastructure.InMemory` | Хранение данных в памяти, реализации репозиториев |
+| `FitnessClub.Tests` | Модульные тесты предметной области и сервисных запросов |
 
----
+## REST API
+
+Для основных сущностей реализован полный CRUD.
+
+### Clients
+
+```text
+POST   /api/clients
+GET    /api/clients
+GET    /api/clients/{id}
+PUT    /api/clients/{id}
+DELETE /api/clients/{id}
+```
+
+### Lessons
+
+```text
+POST   /api/lessons
+GET    /api/lessons
+GET    /api/lessons/{id}
+PUT    /api/lessons/{id}
+DELETE /api/lessons/{id}
+```
+
+### Specializations
+
+```text
+POST   /api/specializations
+GET    /api/specializations
+GET    /api/specializations/{id}
+PUT    /api/specializations/{id}
+DELETE /api/specializations/{id}
+```
+
+### Trainers
+
+```text
+POST   /api/trainers
+GET    /api/trainers
+GET    /api/trainers/{id}
+PUT    /api/trainers/{id}
+DELETE /api/trainers/{id}
+```
+
+### Analytics
+
+```text
+GET /api/analytics/trainers/experienced
+GET /api/analytics/clients/expired-subscription
+GET /api/analytics/halls/availability
+GET /api/analytics/halls/lessons
+GET /api/analytics/trainers/top
+```
+
+Для POST и PUT используются `ClientEditDto`, `LessonEditDto`,
+`SpecializationEditDto`, `UpsertTrainingSessionDto` без поля `id`.
+Идентификатор создаётся в репозитории; при обновлении он берётся из маршрута. Название специализации тренера заполняется сервером только в ответе.
+
+* POST возвращает `201 Created` и DTO.
+* PUT возвращает `200 OK` и обновлённый DTO.
+* DELETE возвращает `204 No Content`.
+* Несуществующая запись — `404 Not Found`.
+* Ошибки валидации — `400 Bad Request` в формате `ValidationProblemDetails`.
+* Непредвиденные ошибки — `500 Internal Server Error` без внутренних деталей.
 
 ## Unit-тесты
 * Тренеры, стаж работы которых не менее 5 лет.
-* Проверка доступности зала для записи в данный момент.
 * Клиенты с просроченным абонементом, упорядоченные по ФИО.
+* Проверка доступности зала для записи в данный момент.
 * Занятия за текущий месяц в выбранном зале.
 * Топ-5 наиболее популярных тренеров.
 
-## Запуск тестов
+## Запуск
+
+```bash
+dotnet run --project src/FitnessClub.Api
+```
+
+Сервер доступен на `http://localhost:5297/swagger/index.html` или `https://localhost:7075/swagger/index.html`
+
+### Запуск тестов
 ```bash
 dotnet test
 ```
