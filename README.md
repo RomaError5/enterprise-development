@@ -88,7 +88,7 @@ GET /api/analytics/trainers/top
 ```
 
 Для POST и PUT используются `ClientEditDto`, `LessonEditDto`,
-`SpecializationEditDto`, `UpsertTrainingSessionDto` без поля `id`.
+`SpecializationEditDto`, `TrainerEditDto` без поля `id`.
 Идентификатор создаётся в репозитории; при обновлении он берётся из маршрута. Название специализации тренера заполняется сервером только в ответе.
 
 * POST возвращает `201 Created` и DTO.
