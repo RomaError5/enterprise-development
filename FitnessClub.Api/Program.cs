@@ -1,13 +1,17 @@
 using System.Text.Json.Serialization;
 using FitnessClub.Api.Infrastructure;
 using FitnessClub.Application;
-using FitnessClub.Infrastructure.InMemory;
+using FitnessClub.Infrastructure.PostgreSql;
+using FitnessClub.Infrastructure.PostgreSql.Data;
+using FitnessClub.ServiceDefaults;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Хранилище (InMemory): seed-данные и репозитории
-builder.Services.AddInMemoryRepositories();
+builder.AddServiceDefaults();
+builder.AddNpgsqlDbContext<FitnessClubDbContext>("fitnessclub");
+builder.Services.AddPostgreSqlRepositories();
 
 // CRUD- и аналитические сервисы
 builder.Services.AddApplicationServices();
@@ -42,6 +46,13 @@ builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
+// Заполнение БД тестовыми данными
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<FitnessClubDbContext>();
+    await db.Database.MigrateAsync();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -50,4 +61,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseExceptionHandler();
 app.MapControllers();
+app.MapDefaultEndpoints();
 app.Run();
