@@ -41,7 +41,9 @@ public class LessonService(
 
         return new Lesson
         {
+            ClientId = client.Id,
             Client = client,
+            TrainerId = trainer.Id,
             Trainer = trainer,
             DateStart = editDto.DateStart,
             DateEnd = editDto.DateEnd,

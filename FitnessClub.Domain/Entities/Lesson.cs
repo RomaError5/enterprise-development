@@ -13,9 +13,19 @@ public class Lesson : IEntity
     public int Id { get; set; }
 
     /// <summary>
+    /// Идентификатор клиента (внешний ключ)
+    /// </summary>
+    public int ClientId { get; set; }
+
+    /// <summary>
     /// Клиент
     /// </summary>
     public required Client Client { get; set; }
+
+    /// <summary>
+    /// Идентификатор тренера (внешний ключ)
+    /// </summary>
+    public int TrainerId { get; set; }
 
     /// <summary>
     /// Тренер

@@ -31,6 +31,7 @@ public class TrainerService(
                 ? gender
                 : throw new InvalidOperationException("Пол обязателен"),
             BirthDate = editDto.BirthDate,
+            SpecializationId = editDto.SpecializationId,
             Specialization = specialization,
             ExperienceYears = editDto.ExperienceYears,
         };
