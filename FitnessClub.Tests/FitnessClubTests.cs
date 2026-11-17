@@ -1,17 +1,26 @@
-﻿using FitnessClub.Domain.Data;
+using FitnessClub.Domain.Interfaces;
+using FitnessClub.Infrastructure.PostgreSql.Data;
+using FitnessClub.Tests.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FitnessClub.Tests;
 
 /// <summary>
-/// Юнит-тесты
+/// Интеграционные тесты
 /// </summary>
-public class FitnessClubTests(FitnessClubContext db) : IClassFixture<FitnessClubContext>
+[Collection("PostgreSql")]
+public class FitnessClubTests(PostgresFixture postgres)
 {
+    /// <summary>
+    /// Опорная текущая дата тестов — дата, относительно которой составлены seed-данные
+    /// </summary>
+    private static DateTime Today => SeedData.SeedDate.Date;
+
     /// <summary>
     /// Проверка: вывод информации о всех тренерах, стаж работы которых не менее 5 лет
     /// </summary>
     [Fact]
-    public void TrainersWithExperienceAtLeast5Years_ReturnsSortedByFullName()
+    public async Task TrainersWithExperienceAtLeast5Years_ReturnsSortedByFullName()
     {
         string[] expected =
         [
@@ -23,20 +32,25 @@ public class FitnessClubTests(FitnessClubContext db) : IClassFixture<FitnessClub
             "Смирнов Алексей Петрович",
         ];
 
-        var trainers = db.Trainers
+        using var scope = await postgres.CreateScopeAsync();
+        var trainers = await scope.ServiceProvider
+            .GetRequiredService<ITrainerRepository>()
+            .ReadAll();
+
+        var actual = trainers
             .Where(t => t.ExperienceYears >= 5)
             .OrderBy(t => t.FullName)
-            .ToList();
+            .Select(t => t.FullName)
+            .ToArray();
 
-        Assert.Equal(6, trainers.Count);
-        Assert.Equal(expected, trainers.Select(t => t.FullName));
+        Assert.Equal(expected, actual);
     }
 
     /// <summary>
     /// Проверка: вывод информации о клиентах с просроченным абонементом, упорядоченный по ФИО
     /// </summary>
     [Fact]
-    public void ClientsWithExpiredSubscription_ReturnsOrderedByName()
+    public async Task ClientsWithExpiredSubscription_ReturnsOrderedByName()
     {
         string[] expected =
         [
@@ -47,17 +61,22 @@ public class FitnessClubTests(FitnessClubContext db) : IClassFixture<FitnessClub
             "Сидоров Николай Петрович",
         ];
 
-        var clients = db.Clients
-            .Where(c => c.SubscriptionEnd < DateTime.Today)
-            .OrderBy(c => c.FullName)
-            .ToList();
+        using var scope = await postgres.CreateScopeAsync();
+        var clients = await scope.ServiceProvider
+            .GetRequiredService<IClientRepository>()
+            .ReadAll();
 
-        Assert.Equal(5, clients.Count);
-        Assert.Equal(expected, clients.Select(c => c.FullName));
+        var actual = clients
+            .Where(c => c.SubscriptionEnd < Today)
+            .OrderBy(c => c.FullName)
+            .Select(c => c.FullName)
+            .ToArray();
+
+        Assert.Equal(expected, actual);
     }
 
     /// <summary>
-    /// Проверка: проверка того, является ли зал доступным для записи в данный момент
+    /// Проверка того, является ли зал доступным для записи в данный момент
     /// </summary>
     [Theory]
     [InlineData(7, 9, 59, true)]
@@ -65,16 +84,20 @@ public class FitnessClubTests(FitnessClubContext db) : IClassFixture<FitnessClub
     [InlineData(7, 11, 29, false)]
     [InlineData(7, 11, 30, true)]
     [InlineData(7, 12, 0, true)]
-    public void HallAvailability_MatchesSchedule(int day, int hour, int minute, bool expected)
+    public async Task HallAvailability_MatchesSchedule(int day, int hour, int minute, bool expected)
     {
-        bool IsHallAvailable(string hall, DateTime time) =>
-        !db.Lessons.Any(l =>
-            l.Hall == hall &&
-            l.DateStart <= time &&
-            time < l.DateEnd);
+        using var scope = await postgres.CreateScopeAsync();
+        var lessons = await scope.ServiceProvider
+            .GetRequiredService<ILessonRepository>()
+            .ReadAll();
 
-        var today = DateTime.Today;
-        var time = new DateTime(today.Year, today.Month, day, hour, minute, 0);
+        bool IsHallAvailable(string hall, DateTime time) =>
+            !lessons.Any(l =>
+                l.Hall == hall &&
+                l.DateStart <= time &&
+                time < l.DateEnd);
+
+        var time = new DateTime(Today.Year, Today.Month, day, hour, minute, 0);
 
         Assert.Equal(expected, IsHallAvailable("Зал единоборств", time));
     }
@@ -83,7 +106,7 @@ public class FitnessClubTests(FitnessClubContext db) : IClassFixture<FitnessClub
     /// Проверка: вывод информации о занятиях за текущий месяц, проводимых в этом зале
     /// </summary>
     [Fact]
-    public void LessonsOfCurrentMonthInSelectedHall_ReturnsSortedByDate()
+    public async Task LessonsOfCurrentMonthInSelectedHall_ReturnsSortedByDate()
     {
         string[] expected =
         [
@@ -92,22 +115,27 @@ public class FitnessClubTests(FitnessClubContext db) : IClassFixture<FitnessClub
             "Попова Елена Викторовна",
         ];
 
-        var lessons = db.Lessons
-            .Where(l => l.Hall == "Зал йоги" &&
-                        l.DateStart.Year == DateTime.Today.Year &&
-                        l.DateStart.Month == DateTime.Today.Month)
-            .OrderBy(l => l.DateStart)
-            .ToList();
+        using var scope = await postgres.CreateScopeAsync();
+        var lessons = await scope.ServiceProvider
+            .GetRequiredService<ILessonRepository>()
+            .ReadAll();
 
-        Assert.Equal(3, lessons.Count);
-        Assert.Equal(expected, lessons.Select(l => l.Trainer.FullName));
+        var actual = lessons
+            .Where(l => l.Hall == "Зал йоги" &&
+                        l.DateStart.Year == Today.Year &&
+                        l.DateStart.Month == Today.Month)
+            .OrderBy(l => l.DateStart)
+            .Select(l => l.Trainer.FullName)
+            .ToArray();
+
+        Assert.Equal(expected, actual);
     }
 
     /// <summary>
     /// Проверка: вывод топ 5 наиболее популярных тренеров
     /// </summary>
     [Fact]
-    public void Top5PopularTrainers_ReturnsOrderedByLessonsCount()
+    public async Task Top5PopularTrainers_ReturnsOrderedByLessonsCount()
     {
         string[] expected =
         [
@@ -117,14 +145,20 @@ public class FitnessClubTests(FitnessClubContext db) : IClassFixture<FitnessClub
             "Соколов Дмитрий Андреевич",
             "Попова Елена Викторовна",
         ];
+        int[] expectedCounts = [6, 4, 3, 2, 1];
 
-        var top = db.Lessons
+        using var scope = await postgres.CreateScopeAsync();
+        var lessons = await scope.ServiceProvider
+            .GetRequiredService<ILessonRepository>()
+            .ReadAll();
+
+        var top = lessons
             .GroupBy(l => l.Trainer)
             .OrderByDescending(g => g.Count())
             .Take(5)
-            .Select(g => g.Key.FullName)
-            .ToList();
+            .ToArray();
 
-        Assert.Equal(expected, top);
+        Assert.Equal(expected, top.Select(g => g.Key.FullName).ToArray());
+        Assert.Equal(expectedCounts, top.Select(g => g.Count()).ToArray());
     }
 }
