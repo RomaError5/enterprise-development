@@ -1,121 +1,41 @@
-# Разработка корпоративных приложений — лабораторная работа №2
+# Лабораторная работа №3 — «ORM»
 
-## «Сервер — REST API»
-В рамках второй лабораторной работы для предметной области реализовано серверное приложение с использованием ASP.NET Core Web API.
+В рамках третьей лабораторной работы для предметной области реализована объектно-реляционная модель, подключение к базе данных PostgreSQL и настройка оркестрации через .NET Aspire.
 
-Сервер предоставляет REST API для выполнения CRUD-операций над сущностями первой лабораторной работы, операций получения связанных данных и аналитических запросов.
-
-Данные хранятся в памяти в виде коллекций.
+Хранилище переведено с InMemory-коллекций на **PostgreSQL 16+** через **Entity Framework Core 10**. Контракты слоёв Domain/Contracts/Application не изменились, замена хранилища по-прежнему сводится к одной строке в DI.
 
 Вариант: 53
-
----
-
-## Предметная область
-Проект моделирует работу фитнесс-клуба.
-
-### Основные сущности
-| Класс | Назначение |
-|---|---|
-| `Person` | Базовый класс с персональными данными, общими для клиента и тренера: номер паспорта, ФИО, пол (`Gender` — перечисление), дата рождения |
-| `Client` | Клиент фитнес-клуба: телефон, дата начала и дата окончания абонемента |
-| `Trainer` | Тренер фитнес-клуба: специализация (сущность-справочник `Specialization`), стаж работы |
-| `Lesson` | Запись клиента на занятие: клиент, тренер, дата и время начала (окончание может проставляться позднее), название зала, признак пробного посещения |
 
 ## Архитектура решения
 
 | Проект | Назначение |
-|---|---|
+| --- | --- |
+| `FitnessClub.Domain` | Сущности, enum, интерфейсы репозиториев |
+| `FitnessClub.Contracts` | Read/Edit-DTO + интерфейсы сервисов |
+| `FitnessClub.Application` | Реализация сервисов: маппинг сущностей в DTO, бизнес-логика, аналитические запросы |
+| `FitnessClub.Infrastructure.PostgreSql` | `FitnessClubDbContext`, конфигурация модели, EF-репозитории, design-time фабрика, миграции |
 | `FitnessClub.Api` | ASP.NET Core Web API: контроллеры, HTTP-маршруты и конфигурация приложения |
-| `FitnessClub.Application` | Сервисы, бизнес-логика, обработка CRUD-операций и аналитических запросов |
-| `FitnessClub.Contracts` | DTO для передачи данных и интерфейсы сервисов |
-| `FitnessClub.Domain` | Сущности предметной области и интерфейсы репозиториев, генератор тестовых данных |
-| `FitnessClub.Infrastructure.InMemory` | Хранение данных в памяти, реализации репозиториев |
-| `FitnessClub.Tests` | Модульные тесты предметной области и сервисных запросов |
+| `FitnessClub.ServiceDefaults` | Телеметрия Aspire: OpenTelemetry, health-checks, service discovery |
+| `FitnessClub.AppHost` | оркестратор Aspire: поднимает PostgreSQL и API |
+| `FitnessClub.Tests` | Юнит-тесты, адаптированные под новое хранилище |
 
-## REST API
+## Модель данных
 
-Для основных сущностей реализован полный CRUD.
-
-### Clients
-
-```text
-POST   /api/clients
-GET    /api/clients
-GET    /api/clients/{id}
-PUT    /api/clients/{id}
-DELETE /api/clients/{id}
-```
-
-### Lessons
-
-```text
-POST   /api/lessons
-GET    /api/lessons
-GET    /api/lessons/{id}
-PUT    /api/lessons/{id}
-DELETE /api/lessons/{id}
-```
-
-### Specializations
-
-```text
-POST   /api/specializations
-GET    /api/specializations
-GET    /api/specializations/{id}
-PUT    /api/specializations/{id}
-DELETE /api/specializations/{id}
-```
-
-### Trainers
-
-```text
-POST   /api/trainers
-GET    /api/trainers
-GET    /api/trainers/{id}
-PUT    /api/trainers/{id}
-DELETE /api/trainers/{id}
-```
-
-### Analytics
-
-```text
-GET /api/analytics/trainers/experienced
-GET /api/analytics/clients/expired-subscription
-GET /api/analytics/halls/availability
-GET /api/analytics/halls/lessons
-GET /api/analytics/trainers/top
-```
-
-Для POST и PUT используются `ClientEditDto`, `LessonEditDto`,
-`SpecializationEditDto`, `TrainerEditDto` без поля `id`.
-Идентификатор создаётся в репозитории; при обновлении он берётся из маршрута. Название специализации тренера заполняется сервером только в ответе.
-
-* POST возвращает `201 Created` и DTO.
-* PUT возвращает `200 OK` и обновлённый DTO.
-* DELETE возвращает `204 No Content`.
-* Несуществующая запись — `404 Not Found`.
-* Ошибки валидации — `400 Bad Request` в формате `ValidationProblemDetails`.
-* Непредвиденные ошибки — `500 Internal Server Error` без внутренних деталей.
-
-## Unit-тесты
-* Тренеры, стаж работы которых не менее 5 лет.
-* Клиенты с просроченным абонементом, упорядоченные по ФИО.
-* Проверка доступности зала для записи в данный момент.
-* Занятия за текущий месяц в выбранном зале.
-* Топ-5 наиболее популярных тренеров.
+- `Trainer.SpecializationId -> Specializations.Id`, `OnDelete: Restrict`: нельзя удалить специализацию, назначенную тренеру;
+- `Lesson.ClientId -> Clients.Id`, `Lesson.TrainerId -> Trainers.Id`, `OnDelete: Restrict`: нельзя удалить клиента или тренера, у которых есть записи на занятия;
+- enum `Gender` хранится как `integer`;
+- все `DateTime`-колонки `timestamp without time zone`: в предметной области часовые пояса не используются, JSON и seed-данные содержат даты без смещения UTC;
+- ограничение длины строк задано в `OnModelCreating`.
 
 ## Запуск
 
+Требуется установленный Docker Desktop: PostgreSQL запускается в контейнере.
+
 ```bash
-dotnet run --project src/FitnessClub.Api
+dotnet run --project FitnessClub.AppHost
 ```
 
-Сервер доступен на `http://localhost:5297/swagger/index.html` или `https://localhost:7075/swagger/index.html`
+Откроется дашборд Aspire. В нём видны ресурсы `postgres`, `fitnessclub` (БД) и `api`, их логи, трейсы и health-статусы. Swagger API — по ссылке на ресурсе `api` (или `/swagger`). AppHost передаёт строку подключения в API автоматически, а `WaitFor(db)` гарантирует, что API стартует после готовности БД.
 
-### Запуск тестов
-```bash
-dotnet test
-```
+Миграции применяются автоматически при старте API (`db.Database.MigrateAsync()`): создаются 4 таблицы и выполняется первоначальное заполнение.
 
-Тесты также выполняются автоматически в GitHub Actions при каждом push и pull request.
