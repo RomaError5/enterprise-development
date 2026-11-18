@@ -37,5 +37,7 @@ dotnet run --project FitnessClub.AppHost
 
 Откроется дашборд Aspire. В нём видны ресурсы `postgres`, `fitnessclub` (БД) и `api`, их логи, трейсы и health-статусы. Swagger API — по ссылке на ресурсе `api` (или `/swagger`). AppHost передаёт строку подключения в API автоматически, а `WaitFor(db)` гарантирует, что API стартует после готовности БД.
 
+<img width="1849" height="894" alt="изображение" src="https://github.com/user-attachments/assets/4659e610-f9da-4ec0-a2e3-6465dd47babf" />
+
 Миграции применяются автоматически при старте API (`db.Database.MigrateAsync()`): создаются 4 таблицы и выполняется первоначальное заполнение.
 
