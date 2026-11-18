@@ -78,7 +78,7 @@ public class RepositoryCrudTests(PostgresFixture postgres)
 
         var stored = (await lessons.ReadAll()).Single(l => l.Id == created.Id);
         Assert.Equal(client.Id, stored.Client.Id);
-        Assert.Equal("Иванов Пётр Иванович", stored.Trainer.FullName);
+        Assert.Equal("Смирнов Алексей Петрович", stored.Trainer.FullName);
         Assert.Equal("Плавание", stored.Trainer.Specialization.Name);
 
         Assert.True(await lessons.Delete(created.Id));
