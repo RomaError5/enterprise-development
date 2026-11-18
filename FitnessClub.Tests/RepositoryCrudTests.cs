@@ -63,7 +63,7 @@ public class RepositoryCrudTests(PostgresFixture postgres)
         var trainers = scope.ServiceProvider.GetRequiredService<ITrainerRepository>();
 
         var client = (await clients.ReadAll()).First(c => c.FullName == "Орлова Марина Ивановна");
-        var trainer = (await trainers.ReadAll()).First(t => t.FullName == "Иванов Пётр Иванович");
+        var trainer = (await trainers.ReadAll()).First(t => t.FullName == "Смирнов Алексей Петрович");
 
         var created = await lessons.Create(new Lesson
         {
